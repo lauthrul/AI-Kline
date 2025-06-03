@@ -16,6 +16,8 @@ AI看线是一个基于Python的A股分析工具，结合了传统技术分析�
 - **可视化**：生成静态和交互式K线图及技术指标图表
 - **AI分析**：利用Gemini AI模型分析股票数据并预测未来走势
 - **Web界面**：提供简洁美观的Web界面，方便用户输入股票代码查看分析结果
+- **MCP SERVER**：提供MCP SERVER支持，支持通过LLM交互，随时分析股票
+
 
 ## 安装说明
 
@@ -79,12 +81,33 @@ Web界面包括以下内容：
 
 ![Web界面截图](static/images/image.png)
 
+
+### MCP SERVER使用
+
+启动mcp：
+```bash
+uv run  mcp_server.py
+```
+
+然后在mcp客户端中配置（streamable-http）：
+http://localhost:8000/mcp 
+
+Cherry-Studio页面截图：
+
+![MCP界面截图](static/images/mcp1.png)
+![MCP界面截图](static/images/mcp2.png)
+
+
+
 ### 输出结果
 
 程序运行后将在指定的保存路径下生成：
 
 1. K线图和技术指标图表（静态PNG图片和交互式HTML图表）
 2. AI分析结果文本文件
+
+
+
 
 ## 项目结构
 
@@ -112,6 +135,8 @@ AI看线/
     └── *_analysis_result.txt # 分析结果文件
 ```
 
+
+
 ## 交流学习
 
 ![加群](static/images/yzbjs1.png)
@@ -122,6 +147,8 @@ AI看线/
 - AI分析结果基于历史数据和当前信息，不能保证未来走势的准确性
 - 使用前请确保已正确配置Gemini API密钥
 - 股票数据获取依赖于AKShare库，可能受到网络和数据源的限制
+- 本项目为QuantML开源项目，转载或使用需注明出处，商业使用请联系微信号QuantML
+
 
 ## 免责声明
 
