@@ -2,6 +2,7 @@ from mcp.server.fastmcp import FastMCP
 
 import os
 import argparse
+import json
 import logging
 import asyncio
 from dotenv import load_dotenv
@@ -29,6 +30,60 @@ async def ashare_analysis(symbol: str
     """
     try:
         analysis_result = await run_in_threadpool(pattern_run, symbol=symbol)
+        return analysis_result
+    except Exception as e:
+        logger.error(f"Error analyzing stock pattern: {e}")
+        return f"Failed to analyze stock pattern: {str(e)}"
+    
+@mcp.tool()
+async def get_ashare_quote(symbol: str, period: str = '1周'
+                                   ) -> str:
+    """
+    获取股票行情数据
+    Args:
+        symbol: A股股票代码或者指数代码 (股票代码： 000001, 600001, 300001)
+        period: 分析周期 (1年, 6个月, 3个月, 1个月, 1周)
+    """
+    try:
+        data_fetcher = StockDataFetcher()
+        stock_data = data_fetcher.fetch_stock_data(symbol, period)
+        analysis_result = stock_data.to_dict()
+        return str(analysis_result)
+    except Exception as e:
+        logger.error(f"Error analyzing stock pattern: {e}")
+        return f"Failed to analyze stock pattern: {str(e)}"
+
+@mcp.tool()
+async def get_ashare_news(symbol: str
+                                   ) -> str:
+    """
+    获取股票新闻
+    Args:
+        symbol: A股股票代码或者指数代码 (股票代码： 000001, 600001, 300001)
+    """
+    try:
+        financial_data = {}
+        data_fetcher = StockDataFetcher()
+        news_data = data_fetcher.fetch_news_data(symbol)
+        financial_data['news'] = news_data
+        analysis_result = json.dumps(financial_data, ensure_ascii=False, indent=2)
+        return analysis_result
+    except Exception as e:
+        logger.error(f"Error analyzing stock pattern: {e}")
+        return f"Failed to analyze stock pattern: {str(e)}"
+    
+@mcp.tool()
+async def get_ashare_financial(symbol: str
+                                   ) -> str:
+    """
+    获取股票财务数据
+    Args:
+        symbol: A股股票代码或者指数代码 (股票代码： 000001, 600001, 300001)
+    """
+    try:
+        data_fetcher = StockDataFetcher()
+        financial_data = data_fetcher.fetch_financial_data(symbol)
+        analysis_result = json.dumps(financial_data, ensure_ascii=False, indent=2)
         return analysis_result
     except Exception as e:
         logger.error(f"Error analyzing stock pattern: {e}")

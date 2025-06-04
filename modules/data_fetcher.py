@@ -44,6 +44,8 @@ class StockDataFetcher:
             start_date = (datetime.now() - timedelta(days=91)).strftime('%Y%m%d')
         elif period == '1个月':
             start_date = (datetime.now() - timedelta(days=30)).strftime('%Y%m%d')
+        elif period == '1周':
+            start_date = (datetime.now() - timedelta(days=7)).strftime('%Y%m%d')
         else:
             start_date = (datetime.now() - timedelta(days=365)).strftime('%Y%m%d')
         
