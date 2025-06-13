@@ -15,10 +15,12 @@ from modules.ai_analyzer import AIAnalyzer
 # Initialize FastMCP server
 mcp = FastMCP("AI-Kline")
 
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set up logging
+# 加载环境变量
+load_dotenv()
 
 @mcp.tool()
 async def ashare_analysis(symbol: str

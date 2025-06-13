@@ -1,4 +1,11 @@
-# AI看线 - A股技术分析与AI预测工具
+# AI看线 - 股票技术分析与AI预测工具（AI-Kline - Stock Technical Analysis and AI Prediction Tool）
+
+
+<div align="center">
+  <!-- Keep these links. Translations will automatically update with the README. -->
+  <a href="README_EN.md">English</a> |  <a href="README.md">中文</a> 
+
+</div>
 
 ## 项目简介
 
