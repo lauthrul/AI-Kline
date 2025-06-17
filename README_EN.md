@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 3. Create `.env` file and add Gemini API key:
 ```
-GEMINI_API_KEY=your_api_key_here
+XAI_API_KEY=your_api_key_here
 ```
 
 > Note: To obtain a Gemini API key, register at [Google AI Studio](https://ai.google.dev/) and create an API key
