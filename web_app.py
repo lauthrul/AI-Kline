@@ -6,6 +6,9 @@ from modules.technical_analyzer import TechnicalAnalyzer
 from modules.visualizer import Visualizer
 from modules.ai_analyzer import AIAnalyzer
 from dotenv import load_dotenv
+import matplotlib
+# 设置 matplotlib 使用非 GUI 后端以避免 tkinter 依赖
+matplotlib.use('Agg')
 
 # 加载环境变量
 load_dotenv()
@@ -103,4 +106,4 @@ def get_stock_info(stock_code):
         return jsonify({'error': f'获取股票信息时出错: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    app.run(debug=True, host='0.0.0.0', port=5000, threaded=False)  # 禁用多线程

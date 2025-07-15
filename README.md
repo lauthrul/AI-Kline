@@ -46,7 +46,7 @@ pip install -r requirements.txt
 3. 创建`.env`文件，添加Gemini API密钥
 
 ```
-GEMINI_API_KEY=your_api_key_here
+XAI_API_KEY=your_api_key_here
 ```
 
 > 注意：获取Gemini API密钥需要在[Google AI Studio](https://ai.google.dev/)注册并创建API密钥

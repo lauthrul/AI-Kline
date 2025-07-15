@@ -1,10 +1,18 @@
 import os
 from PIL import Image
-from google import genai
-from google.genai import types
+from openai import OpenAI
+# from google import genai
+# from google.genai import types
 import pandas as pd
 import json
 from datetime import datetime
+import io
+import base64
+import threading
+import logging
+
+# 配置日志以调试线程问题
+logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
 
 class AIAnalyzer:
     """
@@ -13,12 +21,17 @@ class AIAnalyzer:
     
     def __init__(self):
         # 初始化Gemini API
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = os.getenv("XAI_API_KEY")
         if api_key:
-            self.client = genai.Client(api_key=api_key)
+            # self.client = genai.Client(api_key=api_key)
+            # Initialize OpenAI client with API key
+            self.client = OpenAI(
+                api_key=api_key,
+                base_url="https://api.x.ai/v1",
+            )
         else:
             print("警告: 未设置GEMINI_API_KEY环境变量，AI分析功能将无法使用")
-            print("请在.env文件中添加: GEMINI_API_KEY=your_api_key")
+            print("请在.env文件中添加: XAI_API_KEY=your_api_key")
     
     def analyze(self, stock_data, indicators, financial_data, news_data, stock_code, save_path):
         """
@@ -34,10 +47,13 @@ class AIAnalyzer:
         返回:
             str: 分析结果文本
         """
-        if not os.getenv("GEMINI_API_KEY"):
+        if not os.getenv("XAI_API_KEY"):
             return "错误: 未设置GEMINI_API_KEY环境变量，无法使用AI分析功能。请在.env文件中添加GEMINI_API_KEY。"
         
         try:
+            # 记录当前线程以调试
+            logging.debug(f"运行 analyze 方法的线程: {threading.current_thread().name}")
+            
             # 获取股票名称
             try:
                 import akshare as ak
@@ -56,27 +72,65 @@ class AIAnalyzer:
             prompt = self._build_prompt(analysis_data, stock_code, stock_name)
 
 
-            iamge_path = os.path.join(save_path, f"charts/{stock_code}_technical_analysis.png")
-            image = Image.open(iamge_path)
-            
+            image_path = os.path.join(save_path, f"charts/{stock_code}_technical_analysis.png")
+            logging.debug(f"打开图像: {image_path}")
+            # image = Image.open(image_path)
+            img = Image.open(image_path)
+            try:
+                buffered = io.BytesIO()
+                img.save(buffered, format="PNG")
+                img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+            finally:
+                logging.debug("关闭图像")
+                img.close()  # 显式关闭图像以避免延迟清理
+                
             # 调用Gemini API
-            response = self.client.models.generate_content(
-                model="gemini-2.5-flash-preview-04-17",
-                config=types.GenerateContentConfig(
-                    system_instruction="你是一位专业的股票分析师，请基于以下数据分析股票的K线图和基本面情况，并预测上涨的概率。",
-                    temperature=0,
-                    top_p=0.95,
-                    top_k=1,
-                    candidate_count=1,
-                    seed=5,
-                    presence_penalty=0.0,
-                    frequency_penalty=0.0,
-                ),
-                contents=[image, prompt]
+            # response = self.client.models.generate_content(
+            #     model="gemini-2.5-flash-preview-04-17",
+            #     config=types.GenerateContentConfig(
+            #         system_instruction="你是一位专业的股票分析师，请基于以下数据分析股票的K线图和基本面情况，并预测上涨的概率。",
+            #         temperature=0,
+            #         top_p=0.95,
+            #         top_k=1,
+            #         candidate_count=1,
+            #         seed=5,
+            #         presence_penalty=0.0,
+            #         frequency_penalty=0.0,
+            #     ),
+            #     contents=[image, prompt]
+            # )
+            response = self.client.chat.completions.create(
+                model="grok-2-vision-1212",  # Replace with an appropriate OpenAI-compatible model
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "你是一位专业的股票分析师，请基于以下数据分析股票的K线图和基本面情况，并预测上涨的概率。"
+                    },
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/png;base64,{img_base64}"
+                                }
+                            }
+                        ]  # Assuming image is properly formatted
+                    }
+                ],
+                temperature=0,
+                top_p=0.95,
+                n=1,  # Equivalent to candidate_count
+                seed=5,
+                presence_penalty=0.0,
+                frequency_penalty=0.0
             )
             
             # 处理响应
-            analysis_result = response.text
+            # analysis_result = response.text
+            # 处理响应
+            analysis_result = response.choices[0].message.content
             
             # 添加时间戳和免责声明
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
