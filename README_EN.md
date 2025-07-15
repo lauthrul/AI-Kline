@@ -7,14 +7,14 @@ AI Stock Analysis is a Python-based A-share analysis tool that combines traditio
 1. Retrieve historical price-volume data for A-share stocks and calculate various technical indicators
 2. Generate professional K-line charts and technical indicator visualizations
 3. Access stock-related financial data and news information
-4. Use Google's Gemini AI model to analyze integrated data and predict future stock trends
+4. Use  multi-modal AI model to analyze integrated data and predict future stock trends
 
 ## Key Features
 
 - **Data Acquisition**: Uses AKShare to obtain historical trading data, financial data, and news for A-share stocks
 - **Technical Analysis**: Calculates multiple technical indicators including MA, MACD, KDJ, RSI, Bollinger Bands, etc.
 - **Visualization**: Generates static and interactive K-line charts and technical indicator charts
-- **AI Analysis**: Utilizes Gemini AI model to analyze stock data and predict future trends
+- **AI Analysis**: Utilizes  multi-modal AI model to analyze stock data and predict future trends
 - **Web Interface**: Provides a clean and intuitive web interface for users to input stock codes and view analysis results
 - **MCP SERVER**: Offers MCP SERVER support for LLM interaction, enabling real-time stock analysis
 
@@ -34,12 +34,14 @@ AI Stock Analysis is a Python-based A-share analysis tool that combines traditio
 pip install -r requirements.txt
 ```
 
-3. Create `.env` file and add Gemini API key:
+3. Create `.env` file and add API key:
 ```
-XAI_API_KEY=your_api_key_here
+API_KEY=your_api_key_here
+BASE_URL==https://dashscope.aliyuncs.com/compatible-mode/v1
+MODEL_NAME=qwen-vl-qvq
 ```
 
-> Note: To obtain a Gemini API key, register at [Google AI Studio](https://ai.google.dev/) and create an API key
+> Note: You need to use multi-modal models
 
 ## Usage
 

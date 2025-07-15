@@ -10,9 +10,17 @@ import io
 import base64
 import threading
 import logging
+from dotenv import load_dotenv
+
 
 # 配置日志以调试线程问题
 logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
+BASE_URL = os.getenv("BASE_URL", "https://api.x.ai/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "grok-2-vision-1212")  # 默认模型名称
 
 class AIAnalyzer:
     """
@@ -21,17 +29,16 @@ class AIAnalyzer:
     
     def __init__(self):
         # 初始化Gemini API
-        api_key = os.getenv("XAI_API_KEY")
-        if api_key:
+        if API_KEY:
             # self.client = genai.Client(api_key=api_key)
             # Initialize OpenAI client with API key
             self.client = OpenAI(
-                api_key=api_key,
-                base_url="https://api.x.ai/v1",
+                api_key=API_KEY,
+                base_url=BASE_URL,
             )
         else:
-            print("警告: 未设置GEMINI_API_KEY环境变量，AI分析功能将无法使用")
-            print("请在.env文件中添加: XAI_API_KEY=your_api_key")
+            print("警告: 未设置API_KEY环境变量，AI分析功能将无法使用")
+            print("请在.env文件中添加: API_KEY=your_api_key")
     
     def analyze(self, stock_data, indicators, financial_data, news_data, stock_code, save_path):
         """
@@ -47,8 +54,8 @@ class AIAnalyzer:
         返回:
             str: 分析结果文本
         """
-        if not os.getenv("XAI_API_KEY"):
-            return "错误: 未设置GEMINI_API_KEY环境变量，无法使用AI分析功能。请在.env文件中添加GEMINI_API_KEY。"
+        if not os.getenv("API_KEY"):
+            return "错误: 未设置API_KEY环境变量，无法使用AI分析功能。请在.env文件中添加API_KEY。"
         
         try:
             # 记录当前线程以调试
@@ -100,7 +107,7 @@ class AIAnalyzer:
             #     contents=[image, prompt]
             # )
             response = self.client.chat.completions.create(
-                model="grok-2-vision-1212",  # Replace with an appropriate OpenAI-compatible model
+                model=MODEL_NAME,  # Replace with an appropriate OpenAI-compatible model
                 messages=[
                     {
                         "role": "system",
