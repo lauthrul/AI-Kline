@@ -48,7 +48,7 @@ pip install -r requirements.txt
 ```
 API_KEY=your_api_key_here
 BASE_URL==https://dashscope.aliyuncs.com/compatible-mode/v1
-MODEL_NAME=qwen-vl-qvq
+MODEL_NAME=qwen-vl-max
 ```
 
 > 注意：需使用多模态模型
