@@ -14,14 +14,14 @@ AI看线是一个基于Python的A股分析工具，结合了传统技术分析�
 1. 获取A股股票的历史量价数据并计算各种技术指标
 2. 生成专业的K线图和技术指标可视化图表
 3. 获取股票相关的财务数据和新闻信息
-4. 使用Google的Gemini AI模型分析整合数据并预测股票未来走势
+4. 使用openai api分析整合数据并预测股票未来走势
 
 ## 功能特点
 
 - **数据获取**：使用AKShare获取A股股票的历史交易数据、财务数据和新闻信息
 - **技术分析**：计算多种技术指标，包括MA、MACD、KDJ、RSI、布林带等
 - **可视化**：生成静态和交互式K线图及技术指标图表
-- **AI分析**：利用Gemini AI模型分析股票数据并预测未来走势
+- **AI分析**：利用多模态AI分析股票数据并预测未来走势
 - **Web界面**：提供简洁美观的Web界面，方便用户输入股票代码查看分析结果
 - **MCP SERVER**：提供MCP SERVER支持，支持通过LLM交互，随时分析股票
 
@@ -43,13 +43,15 @@ AI看线是一个基于Python的A股分析工具，结合了传统技术分析�
 pip install -r requirements.txt
 ```
 
-3. 创建`.env`文件，添加Gemini API密钥
+3. 创建`.env`文件，添加API密钥
 
 ```
-XAI_API_KEY=your_api_key_here
+API_KEY=your_api_key_here
+BASE_URL==https://dashscope.aliyuncs.com/compatible-mode/v1
+MODEL_NAME=qwen-vl-qvq
 ```
 
-> 注意：获取Gemini API密钥需要在[Google AI Studio](https://ai.google.dev/)注册并创建API密钥
+> 注意：需使用多模态模型
 
 ## 使用方法
 
